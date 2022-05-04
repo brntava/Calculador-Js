@@ -2,6 +2,8 @@ class CalcController {
     
     constructor(){
 
+        this._audio = new Audio('../Calculadora-Js/Audio/click.mp3')
+        this._audioOn = false;
         this._lastOperator = '';
         this._lastNumber = '';
 
@@ -62,6 +64,40 @@ class CalcController {
 
         this.setLastNumberDisplay();
         this.pasteFromClipboard();
+
+        // Clicar para add som e tirar ele
+
+        document.querySelectorAll('.btn-ac').forEach(item =>{
+
+            item.addEventListener('dblclick', e =>{
+
+                this.toggleAudio();
+
+            })
+
+        })
+    }
+
+    // Audio
+
+    toggleAudio(){
+
+        this._audioOn = (this._audioOn ? false : true)
+
+    }
+
+    // Tocar o audio
+
+    playAudio(){
+
+        if(this._audioOn){
+
+            // Retonar pra 0 o tempo do audio
+            this._audio.currentTime = 0;
+
+            this._audio.play();
+        }
+
     }
 
     // Eventos
@@ -78,6 +114,8 @@ class CalcController {
 
     initKeyboard(){
         document.addEventListener('keyup', e =>{
+
+        this.playAudio();
 
         switch(e.key){
             case 'Escape':
@@ -331,6 +369,8 @@ class CalcController {
     // Retorna o valor que foi clicado
 
     execBtn(value){
+
+        this.playAudio();
 
         switch(value){
             case 'ac':
