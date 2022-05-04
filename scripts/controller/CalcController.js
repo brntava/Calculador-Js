@@ -235,7 +235,14 @@ class CalcController {
     // Pega o resultado
 
     getResult(){
-        return eval(this._operation.join(" "));
+
+        try{
+            return eval(this._operation.join(" "));
+        } catch{
+            setTimeout(() => {
+                this.setError();
+            }, 1);
+        }
     }
 
     // Faz o calculo
