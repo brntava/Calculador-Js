@@ -362,7 +362,7 @@ class CalcController {
     // Erro
 
     setError(){
-        this.displayCalc = 'erro'
+        this.displayCalc = 'ERRO'
     }
 
 
@@ -472,6 +472,12 @@ class CalcController {
     }
 
     set displayCalc(value){
+
+        if(value.toString().length > 8){
+            this.setError();
+            return false
+        }
+
         this._displayCalcEl.innerHTML = value;
     }
 
