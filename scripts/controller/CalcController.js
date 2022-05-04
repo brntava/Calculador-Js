@@ -16,7 +16,42 @@ class CalcController {
         // Funçao que vai ser executada quando iniciar
         this.initialize();
         this.initButtonEvents();
+        this.initKeyboard();
     }
+
+
+
+    // Copiar e colar
+
+    copyToClipboard(){
+
+        let input = document.createElement('input');
+
+        input.value = this.displayCalc;
+
+        document.body.appendChild(input)
+
+        input.select();
+
+        document.execCommand('Copy');
+
+        // Usando o remove pq foi feito com svg
+        input.remove;
+    }
+
+    pasteFromClipboard(){
+        document.addEventListener('paste', e =>{
+
+           let txt = e.clipboardData.getData('Text');
+
+           this.displayCalc = parseFloat(txt);
+
+           console.log(txt)
+
+        })
+    }
+
+    //
 
     initialize(){
 
@@ -26,6 +61,7 @@ class CalcController {
         }, 1000)
 
         this.setLastNumberDisplay();
+        this.pasteFromClipboard();
     }
 
     // Eventos
@@ -36,6 +72,57 @@ class CalcController {
             element.addEventListener(event, fun)
         })
 
+    }
+
+    // Eventos teclado
+
+    initKeyboard(){
+        document.addEventListener('keyup', e =>{
+
+        switch(e.key){
+            case 'Escape':
+                this.clearAll();
+                break
+
+            case 'Backspace':
+                this.clearEntry();
+                break
+
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '%':
+                this.addOperation(e.key)
+                break
+
+            case 'Enter':
+            case '=':
+                this.calc();
+                break
+
+            case '.':
+            case ',':
+                this.addDot();
+                break
+
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                this.addOperation(parseInt(e.key))
+                break 
+
+            case 'c':
+                if(e.ctrlKey) this.copyToClipboard();
+            }
+        })
     }
 
     // Pega o ultimo valor do array
@@ -204,6 +291,9 @@ class CalcController {
     addDot(){
 
         let lastOperation = this.lastOperation();
+
+        // Verificar se é uma string e se dentro dela tem o ponto ja
+        if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) return;
 
         if(this.isOperator(lastOperation)|| !lastOperation ){
             this.pushOperation('0.');
